@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:todo_firebase/views/auths/signup.dart';
 import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
-import 'package:todo_firebase/views/auths/widgets/custom_auth_button_with_icon.dart';
 import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({
     super.key,
   });
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignUpFormState extends State<SignUpForm> {
+  final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   @override
@@ -22,6 +20,14 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
       child: Column(
         children: [
+          CustomFormTextField(
+            textEditingController: userNameController,
+            hintText: "Enter your username",
+            labelText: "Username",
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           CustomFormTextField(
             textEditingController: emailController,
             hintText: "Enter your email",
@@ -36,53 +42,27 @@ class _LoginFormState extends State<LoginForm> {
             labelText: "Password",
           ),
           const SizedBox(
-            height: 10,
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "Forgot password?",
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
             height: 24,
           ),
-          CustomAuthButton(text: "Login", onPressedFunction: () {}),
+          CustomAuthButton(text: "Signup", onPressedFunction: () {}),
           const SizedBox(
             height: 10,
           ),
-          const Text(
-            "Or login with",
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          CustomAuthButtonWithIcon(
-              text: "Login with google",
-              icon: FaIcon(FontAwesomeIcons.google),
-              onPressedFunction: () {}),
           const SizedBox(
             height: 10,
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const SignUp();
-              }));
+              Navigator.pop(context);
             },
             child: Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(text: "Don't have an account? "),
+                  const TextSpan(text: "Already have an account? "),
                   TextSpan(
                     // recognizer: TapGestureRecognizer()
                     //   ..onTap = () => print("object"),
-                    text: "Register",
+                    text: "Login",
                     style: TextStyle(
                       color: Colors.red[700],
                       fontWeight: FontWeight.w600,
