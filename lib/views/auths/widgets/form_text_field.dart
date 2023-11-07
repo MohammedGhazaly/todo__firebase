@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-class FormTextField extends StatelessWidget {
+class CustomFormTextField extends StatelessWidget {
   final String labelText;
   final String hintText;
-  const FormTextField({
+  final TextEditingController textEditingController;
+  const CustomFormTextField({
     super.key,
     required this.labelText,
     required this.hintText,
+    required this.textEditingController,
   });
 
   @override
@@ -26,6 +28,7 @@ class FormTextField extends StatelessWidget {
           height: 10,
         ),
         TextFormField(
+          controller: textEditingController,
           cursorColor: Colors.orange,
           decoration: InputDecoration(
             hintText: hintText,
