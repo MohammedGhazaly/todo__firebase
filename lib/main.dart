@@ -52,9 +52,10 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: FirebaseAuth.instance.currentUser == null
-          ? const Login()
-          : const HomePage(),
+      home: (FirebaseAuth.instance.currentUser != null &&
+              FirebaseAuth.instance.currentUser!.emailVerified)
+          ? const HomePage()
+          : const Login(),
     );
   }
 }

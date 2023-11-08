@@ -22,9 +22,10 @@ class AuthProvider extends ChangeNotifier {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Account created successfully")));
+      FirebaseAuth.instance.currentUser!.sendEmailVerification();
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {
-        return HomePage();
+        return Login();
       }));
     } on SocketException catch (e) {
       ScaffoldMessenger.of(context)
@@ -62,12 +63,18 @@ class AuthProvider extends ChangeNotifier {
       isRegistering = false;
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Welcome to TODO")));
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) {
-        return const HomePage();
-      }), (Route<dynamic> route) => false);
+
+      if (userCredential.user!.emailVerified) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Welcome to TODO")));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
+          return const HomePage();
+        }));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please verify email before login.")));
+      }
     } on SocketException catch (e) {
       print("Ok");
 
