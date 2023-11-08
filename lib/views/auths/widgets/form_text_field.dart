@@ -5,12 +5,14 @@ class CustomFormTextField extends StatelessWidget {
   final String hintText;
   final TextEditingController textEditingController;
   final bool obsuceText;
+  final String? Function(String?)? validatorFunction;
   const CustomFormTextField({
     super.key,
     required this.labelText,
     required this.hintText,
     required this.textEditingController,
     this.obsuceText = false,
+    this.validatorFunction,
   });
 
   @override
@@ -30,6 +32,7 @@ class CustomFormTextField extends StatelessWidget {
           height: 10,
         ),
         TextFormField(
+          validator: validatorFunction,
           obscureText: obsuceText,
           controller: textEditingController,
           cursorColor: Colors.orange,
@@ -53,6 +56,10 @@ class CustomFormTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.orange, width: 2),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red[700]!, width: 1),
               borderRadius: BorderRadius.circular(50),
             ),
           ),

@@ -1,5 +1,8 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_firebase/views/auths/auth_provider/auth_provider.dart';
 import 'package:todo_firebase/views/auths/signup.dart';
 import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
 import 'package:todo_firebase/views/auths/widgets/custom_auth_button_with_icon.dart';
@@ -17,24 +20,46 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Form(
+      key: formKey,
       child: Column(
         children: [
           CustomFormTextField(
             textEditingController: emailController,
             hintText: "Enter your email",
             labelText: "Email",
+            validatorFunction: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Email should not be empty.";
+              }
+              if (!EmailValidator.validate(value)) {
+                return "Please enter a valid email";
+              }
+              return null;
+            },
           ),
           const SizedBox(
             height: 20,
           ),
           CustomFormTextField(
-            textEditingController: passwordController,
-            hintText: "Enter your password",
-            labelText: "Password",
-          ),
+              textEditingController: passwordController,
+              hintText: "Enter your password",
+              labelText: "Password",
+              obsuceText: true,
+              validatorFunction: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return "Password should not be empty.";
+                }
+                if (value.length < 6) {
+                  return "Enter at least 6 chars";
+                }
+                return null;
+              }),
           const SizedBox(
             height: 10,
           ),
@@ -52,7 +77,17 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(
             height: 24,
           ),
-          CustomAuthButton(text: "Login", onPressedFunction: () {}),
+          CustomAuthButton(
+              text: "Login",
+              isRegister: authProvider.isRegistering,
+              onPressedFunction: () async {
+                if (formKey.currentState!.validate()) {
+                  await authProvider.login(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      context: context);
+                }
+              }),
           const SizedBox(
             height: 10,
           ),
@@ -71,7 +106,8 @@ class _LoginFormState extends State<LoginForm> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
                 return const SignUp();
               }));
             },
