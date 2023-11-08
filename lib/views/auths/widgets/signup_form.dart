@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_firebase/views/auths/auth_provider/auth_provider.dart';
 import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
 import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
 
@@ -15,9 +17,12 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Form(
+      key: formKey,
       child: Column(
         children: [
           CustomFormTextField(
@@ -40,11 +45,20 @@ class _SignUpFormState extends State<SignUpForm> {
             textEditingController: passwordController,
             hintText: "Enter your password",
             labelText: "Password",
+            obsuceText: true,
           ),
           const SizedBox(
             height: 24,
           ),
-          CustomAuthButton(text: "Signup", onPressedFunction: () {}),
+          CustomAuthButton(
+              text: "Signup",
+              isRegister: authProvider.isRegistering,
+              onPressedFunction: () {
+                authProvider.register(
+                    email: emailController.text,
+                    password: passwordController.text,
+                    context: context);
+              }),
           const SizedBox(
             height: 10,
           ),
