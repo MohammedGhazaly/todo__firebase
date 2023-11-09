@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_firebase/firebase_options.dart';
 import 'package:todo_firebase/views/auths/auth_provider/auth_provider.dart';
 import 'package:todo_firebase/views/auths/login.dart';
+import 'package:todo_firebase/views/homepage/category_provider/category_provider.dart';
 import 'package:todo_firebase/views/homepage/home_page.dart';
 
 void main() async {
@@ -15,6 +16,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CategoryProvider(),
         ),
       ],
       child: const MyApp(),
@@ -50,7 +54,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        useMaterial3: true,
+        // useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          centerTitle: true,
+          foregroundColor: Colors.orange,
+          elevation: 3,
+        ),
       ),
       home: (FirebaseAuth.instance.currentUser != null &&
               FirebaseAuth.instance.currentUser!.emailVerified)

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class CustomAuthButton extends StatelessWidget {
   final String text;
   final void Function()? onPressedFunction;
-  final bool isRegister;
+  final bool isLoading;
   const CustomAuthButton({
     super.key,
     required this.text,
     this.onPressedFunction,
-    this.isRegister = false,
+    this.isLoading = false,
   });
 
   @override
@@ -22,7 +22,7 @@ class CustomAuthButton extends StatelessWidget {
             backgroundColor: Colors.orange,
             foregroundColor: Colors.white,
           ),
-          child: isRegister == true
+          child: isLoading == true
               ? Center(
                   child: SizedBox(
                     height: 25,
@@ -32,7 +32,10 @@ class CustomAuthButton extends StatelessWidget {
                     ),
                   ),
                 )
-              : Text(text)),
+              : Text(
+                  text,
+                  style: TextStyle(color: Colors.white),
+                )),
     );
   }
 }

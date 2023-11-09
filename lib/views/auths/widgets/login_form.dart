@@ -1,4 +1,6 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -63,13 +65,22 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(
             height: 10,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                "Forgot password?",
-                style: TextStyle(
-                  fontSize: 14,
+              InkWell(
+                onTap: () async {
+                  if (emailController.text.trim().isNotEmpty &&
+                      EmailValidator.validate(emailController.text)) {
+                    await authProvider.resetEmail(
+                        emailController.text, context);
+                  }
+                },
+                child: const Text(
+                  "Forgot password?",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ],
@@ -79,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           CustomAuthButton(
               text: "Login",
-              isRegister: authProvider.isRegistering,
+              isLoading: authProvider.isRegistering,
               onPressedFunction: () async {
                 if (formKey.currentState!.validate()) {
                   await authProvider.login(
@@ -99,8 +110,10 @@ class _LoginFormState extends State<LoginForm> {
           ),
           CustomAuthButtonWithIcon(
               text: "Login with google",
-              icon: FaIcon(FontAwesomeIcons.google),
-              onPressedFunction: () {}),
+              icon: const FaIcon(FontAwesomeIcons.google),
+              onPressedFunction: () async {
+                await authProvider.signInWithGoogle(context);
+              }),
           const SizedBox(
             height: 10,
           ),

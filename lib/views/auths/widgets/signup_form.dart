@@ -82,7 +82,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           CustomAuthButton(
               text: "Signup",
-              isRegister: authProvider.isRegistering,
+              isLoading: authProvider.isRegistering,
               onPressedFunction: () async {
                 if (formKey.currentState!.validate()) {
                   await authProvider.register(

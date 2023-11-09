@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:todo_firebase/views/auths/login.dart';
 import 'package:todo_firebase/views/homepage/home_page.dart';
 
@@ -95,5 +96,45 @@ class AuthProvider extends ChangeNotifier {
     }
     isRegistering = false;
     notifyListeners();
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) {
+      return;
+    }
+    // Obtain the auth details from the request
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    if (!context.mounted) return;
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      return const HomePage();
+    }));
+  }
+
+  Future<void> resetEmail(String email, BuildContext context) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Check $email to rest password.")));
+
+    //   try {
+
+    //   } catch (e) {
+    //     print("Error");
+    //   }
+    // }
   }
 }
