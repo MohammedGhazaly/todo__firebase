@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
 import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
 import 'package:todo_firebase/views/homepage/category_provider/category_provider.dart';
+import 'package:todo_firebase/views/homepage/home_page.dart';
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key});
@@ -20,6 +21,15 @@ class _AddCategoryState extends State<AddCategory> {
       appBar: AppBar(
         title: Text("Add category"),
         centerTitle: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return HomePage();
+            }));
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,7 +61,7 @@ class _AddCategoryState extends State<AddCategory> {
                     child: Consumer<CategoryProvider>(
                       builder: (context, categoryProvider, _) {
                         return CustomAuthButton(
-                          isLoading: categoryProvider.isLoading,
+                          isLoading: categoryProvider.isAdding,
                           onPressedFunction: () async {
                             if (formKey.currentState!.validate()) {
                               await categoryProvider.addCategory(
