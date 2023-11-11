@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CategoryProvider>(
       create: (context) {
-        return CategoryProvider()..getCategories();
+        return CategoryProvider()..getCategories(context);
       },
       child: Scaffold(
         appBar: AppBar(
