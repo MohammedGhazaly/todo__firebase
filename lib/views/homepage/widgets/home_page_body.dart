@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_firebase/views/add_category/add_category.dart';
+import 'package:todo_firebase/views/edit_category/edit_category.dart';
 import 'package:todo_firebase/views/homepage/category_provider/category_provider.dart';
 import 'package:todo_firebase/views/homepage/home_page.dart';
 import 'package:todo_firebase/views/homepage/widgets/category_card.dart';
@@ -15,32 +16,29 @@ class HomePageBody extends StatelessWidget {
         Provider.of<CategoryProvider>(context, listen: true);
     if (categoryProvider.isConnecting == false) {
       return Center(
-        child: RefreshIndicator(
-          onRefresh: () async {},
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "No internet connection",
-                ),
-                TextButton(
-                    style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white),
-                    onPressed: () async {
-                      if (!context.mounted) return;
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "No internet connection",
+              ),
+              TextButton(
+                  style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white),
+                  onPressed: () async {
+                    if (!context.mounted) return;
 
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const HomePage();
-                      }));
-                    },
-                    child: Text("Try again"))
-              ],
-            ),
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const HomePage();
+                    }));
+                  },
+                  child: Text("Try again"))
+            ],
           ),
         ),
       );
@@ -66,15 +64,25 @@ class HomePageBody extends StatelessWidget {
                     AwesomeDialog(
                       context: context,
                       dialogType: DialogType.warning,
-                      title: "DELETEING CATEGORY!?",
+                      btnCancelText: "delete",
+                      btnOkText: "update",
                       btnOkOnPress: () async {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return EditCategory(
+                            categoryId: categoryProvider.categories[index].id,
+                            categoryName: categoryProvider.categories[index]
+                                ["name"] as String,
+                          );
+                        }));
+                      },
+                      btnCancelOnPress: () async {
                         await categoryProvider.removeCategory(
                             context, categoryProvider.categories[index].id);
                       },
-                      btnCancelOnPress: () {},
                       body: const Center(
                         child: Text(
-                          "You are about to delete a category, are you sure?",
+                          "You can update or delete the category.",
                           textAlign: TextAlign.center,
                         ),
                       ),

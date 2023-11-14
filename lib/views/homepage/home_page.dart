@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
                     return const Login();
                   }));
                 },
-                icon: Icon(Icons.exit_to_app))
+                icon: const Icon(Icons.exit_to_app))
           ],
         ),
         floatingActionButton: FloatingActionButton(

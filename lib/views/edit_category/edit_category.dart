@@ -6,21 +6,32 @@ import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
 import 'package:todo_firebase/views/homepage/category_provider/category_provider.dart';
 import 'package:todo_firebase/views/homepage/home_page.dart';
 
-class AddCategory extends StatefulWidget {
-  const AddCategory({super.key});
+class EditCategory extends StatefulWidget {
+  final String categoryName;
+  final String categoryId;
+  const EditCategory(
+      {super.key, required this.categoryName, required this.categoryId});
 
   @override
-  State<AddCategory> createState() => _AddCategoryState();
+  State<EditCategory> createState() => _EditCategoryState();
 }
 
-class _AddCategoryState extends State<AddCategory> {
+class _EditCategoryState extends State<EditCategory> {
   final formKey = GlobalKey<FormState>();
-  final TextEditingController textEditingController = TextEditingController();
+  late final TextEditingController textEditingController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    textEditingController = TextEditingController(text: widget.categoryName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add category"),
+        title: Text("Edit Category"),
         centerTitle: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -52,7 +63,7 @@ class _AddCategoryState extends State<AddCategory> {
                   return null;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
               SizedBox(
@@ -62,17 +73,17 @@ class _AddCategoryState extends State<AddCategory> {
                     child: Consumer<CategoryProvider>(
                       builder: (context, categoryProvider, _) {
                         return CustomAuthButton(
-                          isLoading: categoryProvider.isAdding,
+                          isLoading: categoryProvider.isUpdating,
                           onPressedFunction: () async {
                             if (formKey.currentState!.validate()) {
-                              await categoryProvider.addCategory(
-                                categoryName: textEditingController.text,
-                                userId: FirebaseAuth.instance.currentUser!.uid,
+                              await categoryProvider.editCateogry(
+                                newName: textEditingController.text,
+                                categoryId: widget.categoryId,
                                 context: context,
                               );
                             }
                           },
-                          text: "Add",
+                          text: "Update",
                         );
                       },
                     )),

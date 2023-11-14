@@ -1,4 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:todo_firebase/views/homepage/home_page.dart';
@@ -8,10 +10,13 @@ class CategoryProvider extends ChangeNotifier {
       FirebaseFirestore.instance.collection("categories");
   bool isAdding = false;
   bool isFetching = true;
+  bool isUpdating = false;
   List<QueryDocumentSnapshot> categories = [];
   bool isConnecting = true;
   Future<void> addCategory(
-      {required String categoryName, required BuildContext context}) async {
+      {required String categoryName,
+      required String userId,
+      required BuildContext context}) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
@@ -20,6 +25,7 @@ class CategoryProvider extends ChangeNotifier {
       try {
         DocumentReference response = await categoriesCollection.add({
           "name": categoryName,
+          "id": userId,
         });
 
         if (!context.mounted) return;
@@ -48,9 +54,10 @@ class CategoryProvider extends ChangeNotifier {
         connectivityResult == ConnectivityResult.wifi) {
       categories = [];
       try {
-        QuerySnapshot categoriesSnapshot =
-            await FirebaseFirestore.instance.collection("categories").get();
-
+        QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance
+            .collection("categories")
+            .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .get();
         for (var element in categoriesSnapshot.docs) {
           categories.add(element);
         }
@@ -82,6 +89,39 @@ class CategoryProvider extends ChangeNotifier {
       } catch (e) {
         print(e);
       }
+    } else {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No internet connection")));
+      isConnecting = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> editCateogry(
+      {required BuildContext context,
+      required String categoryId,
+      required String newName}) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      try {
+        isUpdating = true;
+        notifyListeners();
+        await categoriesCollection.doc(categoryId).update({
+          "name": newName,
+        });
+        if (!context.mounted) return;
+
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const HomePage();
+        }));
+      } catch (e) {}
+      isUpdating = false;
+      notifyListeners();
     } else {
       if (!context.mounted) return;
 
