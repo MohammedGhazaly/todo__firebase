@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_firebase/views/auths/auth_provider/auth_provider.dart';
-import 'package:todo_firebase/views/auths/login.dart';
-import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
-import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
+import 'package:todo_firebase/features/auths/auth_provider/auth_provider.dart';
+import 'package:todo_firebase/features/auths/login.dart';
+import 'package:todo_firebase/features/auths/widgets/custom_auth_button.dart';
+import 'package:todo_firebase/features/auths/widgets/form_text_field.dart';
 import 'package:email_validator/email_validator.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -19,6 +19,15 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    userNameController.dispose();
+    super.dispose();
+  }
+
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

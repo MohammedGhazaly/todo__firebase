@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
-import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
-import 'package:todo_firebase/views/homepage/category_provider/category_provider.dart';
-import 'package:todo_firebase/views/homepage/home_page.dart';
+import 'package:todo_firebase/features/auths/widgets/custom_auth_button.dart';
+import 'package:todo_firebase/features/auths/widgets/form_text_field.dart';
+import 'package:todo_firebase/features/category/category_provider/category_provider.dart';
+import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 
 class EditCategory extends StatefulWidget {
   final String categoryName;
@@ -21,6 +21,13 @@ class _EditCategoryState extends State<EditCategory> {
   late final TextEditingController textEditingController;
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -29,6 +36,7 @@ class _EditCategoryState extends State<EditCategory> {
 
   @override
   Widget build(BuildContext context) {
+    final categoryProvider = Provider.of<CategoryProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Category"),
@@ -36,10 +44,11 @@ class _EditCategoryState extends State<EditCategory> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-              return HomePage();
-            }));
+            // Navigator.pop(context,
+            //     MaterialPageRoute(builder: (context) {
+            //   return HomePage();
+            // }));
+            Navigator.pop(context);
           },
         ),
       ),
@@ -70,22 +79,18 @@ class _EditCategoryState extends State<EditCategory> {
                 width: 150,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(25),
-                    child: Consumer<CategoryProvider>(
-                      builder: (context, categoryProvider, _) {
-                        return CustomAuthButton(
-                          isLoading: categoryProvider.isUpdating,
-                          onPressedFunction: () async {
-                            if (formKey.currentState!.validate()) {
-                              await categoryProvider.editCateogry(
-                                newName: textEditingController.text,
-                                categoryId: widget.categoryId,
-                                context: context,
-                              );
-                            }
-                          },
-                          text: "Update",
-                        );
+                    child: CustomAuthButton(
+                      isLoading: categoryProvider.isUpdating,
+                      onPressedFunction: () async {
+                        if (formKey.currentState!.validate()) {
+                          await categoryProvider.editCateogry(
+                            newName: textEditingController.text,
+                            categoryId: widget.categoryId,
+                            context: context,
+                          );
+                        }
                       },
+                      text: "Update",
                     )),
               )
             ],

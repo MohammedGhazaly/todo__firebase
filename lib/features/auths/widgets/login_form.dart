@@ -4,11 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_firebase/views/auths/auth_provider/auth_provider.dart';
-import 'package:todo_firebase/views/auths/signup.dart';
-import 'package:todo_firebase/views/auths/widgets/custom_auth_button.dart';
-import 'package:todo_firebase/views/auths/widgets/custom_auth_button_with_icon.dart';
-import 'package:todo_firebase/views/auths/widgets/form_text_field.dart';
+import 'package:todo_firebase/features/auths/auth_provider/auth_provider.dart';
+import 'package:todo_firebase/features/auths/signup.dart';
+import 'package:todo_firebase/features/auths/widgets/custom_auth_button.dart';
+import 'package:todo_firebase/features/auths/widgets/custom_auth_button_with_icon.dart';
+import 'package:todo_firebase/features/auths/widgets/form_text_field.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -22,6 +22,15 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

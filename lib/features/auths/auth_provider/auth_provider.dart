@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:todo_firebase/views/auths/login.dart';
-import 'package:todo_firebase/views/homepage/home_page.dart';
+import 'package:todo_firebase/features/auths/login.dart';
+import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool isRegistering = false;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:todo_firebase/views/auths/widgets/app_logo.dart';
-import 'package:todo_firebase/views/auths/widgets/signup_form.dart';
+import 'package:todo_firebase/features/auths/widgets/app_logo.dart';
+import 'package:todo_firebase/features/auths/widgets/login_form.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+class Login extends StatelessWidget {
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class SignUp extends StatelessWidget {
                   height: 20,
                 ),
                 const Text(
-                  "Sign up",
+                  "Login",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
@@ -31,13 +31,13 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Sign up to continue using the app.",
+                  "Login to continue using the app",
                   style: TextStyle(color: Colors.grey[600]),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                SignUpForm(),
+                LoginForm(),
               ],
             ),
           ),

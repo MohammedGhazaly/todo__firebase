@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_firebase/firebase_options.dart';
-import 'package:todo_firebase/views/auths/auth_provider/auth_provider.dart';
-import 'package:todo_firebase/views/auths/login.dart';
-import 'package:todo_firebase/views/homepage/category_provider/category_provider.dart';
-import 'package:todo_firebase/views/homepage/home_page.dart';
+import 'package:todo_firebase/features/auths/auth_provider/auth_provider.dart';
+import 'package:todo_firebase/features/auths/login.dart';
+import 'package:todo_firebase/features/category/category_provider/category_provider.dart';
+import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

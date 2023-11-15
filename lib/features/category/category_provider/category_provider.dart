@@ -1,9 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todo_firebase/views/homepage/home_page.dart';
+import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 
 class CategoryProvider extends ChangeNotifier {
   CollectionReference categoriesCollection =
@@ -27,14 +26,18 @@ class CategoryProvider extends ChangeNotifier {
           "name": categoryName,
           "id": userId,
         });
-
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("$categoryName category added")));
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return const HomePage();
-        }));
+        await getCategories(context);
+        if (!context.mounted) return;
+
+        Navigator.pop(context);
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (context) {
+        //   return const HomePage();
+
+        // }));
       } catch (e) {}
       isAdding = false;
       notifyListeners();
@@ -43,7 +46,6 @@ class CategoryProvider extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("No internet connection")));
       isConnecting = false;
-      notifyListeners();
     }
   }
 
@@ -54,6 +56,8 @@ class CategoryProvider extends ChangeNotifier {
         connectivityResult == ConnectivityResult.wifi) {
       categories = [];
       try {
+        isFetching = true;
+        notifyListeners();
         QuerySnapshot categoriesSnapshot = await FirebaseFirestore.instance
             .collection("categories")
             .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -82,20 +86,14 @@ class CategoryProvider extends ChangeNotifier {
         connectivityResult == ConnectivityResult.wifi) {
       try {
         await categoriesCollection.doc(categoryId).delete();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return const HomePage();
-        }));
+        await getCategories(context);
       } catch (e) {
         print(e);
       }
     } else {
-      if (!context.mounted) return;
-
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("No internet connection")));
       isConnecting = false;
-      notifyListeners();
     }
   }
 
@@ -113,12 +111,11 @@ class CategoryProvider extends ChangeNotifier {
         await categoriesCollection.doc(categoryId).update({
           "name": newName,
         });
-        if (!context.mounted) return;
 
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) {
-          return const HomePage();
-        }));
+        if (!context.mounted) return;
+        await getCategories(context);
+        if (!context.mounted) return;
+        Navigator.pop(context);
       } catch (e) {}
       isUpdating = false;
       notifyListeners();
