@@ -5,6 +5,7 @@ import 'package:todo_firebase/features/category/edit_category/edit_category.dart
 import 'package:todo_firebase/features/category/category_provider/category_provider.dart';
 import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 import 'package:todo_firebase/features/category/category_homepage/widgets/category_card.dart';
+import 'package:todo_firebase/utils/shared_widgets/no_internet_widget.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -28,33 +29,7 @@ class _HomePageBodyState extends State<HomePageBody> {
       builder: (context, categoryProvider, _) {
         {
           if (categoryProvider.isConnecting == false) {
-            return Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "No internet connection",
-                    ),
-                    TextButton(
-                        style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            backgroundColor: Colors.orange,
-                            foregroundColor: Colors.white),
-                        onPressed: () async {
-                          if (!context.mounted) return;
-
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const HomePage();
-                          }));
-                        },
-                        child: Text("Try again"))
-                  ],
-                ),
-              ),
-            );
+            return NoInternetWidget();
           } else {
             return Padding(
               padding: const EdgeInsets.all(24.0),

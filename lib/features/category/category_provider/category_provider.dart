@@ -51,6 +51,7 @@ class CategoryProvider extends ChangeNotifier {
 
   Future<void> getCategories(BuildContext context) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
+    isConnecting = true;
 
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
