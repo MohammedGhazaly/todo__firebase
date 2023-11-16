@@ -8,6 +8,7 @@ class NotesProvider extends ChangeNotifier {
   bool isConnecting = true;
   bool isFetching = true;
   bool isAdding = false;
+  bool isUpdating = false;
 
   Future<void> getNotes(BuildContext context, final categoryId) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
@@ -77,6 +78,74 @@ class NotesProvider extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("No internet connection")));
       isConnecting = false;
+    }
+  }
+
+  Future<void> removeNote(
+      {context, required String categoryId, required String noteId}) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      try {
+        // await categoriesCollection.doc(categoryId).delete();
+        await FirebaseFirestore.instance
+            .collection("categories")
+            .doc(categoryId)
+            .collection("notes")
+            .doc(noteId)
+            .delete();
+        await getNotes(context, categoryId);
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No internet connection")));
+      isConnecting = false;
+    }
+  }
+
+  Future<void> editNote({
+    required BuildContext context,
+    required String categoryId,
+    required String newNote,
+    required String noteId,
+  }) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      try {
+        isUpdating = true;
+        notifyListeners();
+
+        await FirebaseFirestore.instance
+            .collection("categories")
+            .doc(categoryId)
+            .collection("notes")
+            .doc(noteId)
+            .update({
+          "note": newNote,
+        });
+        // await categoriesCollection.doc(categoryId).update({
+        //   "name": newName,
+        // });
+
+        if (!context.mounted) return;
+        await getNotes(context, categoryId);
+        if (!context.mounted) return;
+        Navigator.pop(context);
+      } catch (e) {}
+      isUpdating = false;
+      notifyListeners();
+    } else {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No internet connection")));
+      isConnecting = false;
+      notifyListeners();
     }
   }
 }
