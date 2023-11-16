@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_firebase/features/notes/notes_provider/notes_provider.dart';
 import 'package:todo_firebase/firebase_options.dart';
 import 'package:todo_firebase/features/auths/auth_provider/auth_provider.dart';
 import 'package:todo_firebase/features/auths/login.dart';
@@ -19,6 +20,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => CategoryProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NotesProvider(),
         ),
       ],
       child: const MyApp(),

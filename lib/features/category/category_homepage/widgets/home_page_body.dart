@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_firebase/features/category/edit_category/edit_category.dart';
 import 'package:todo_firebase/features/category/category_provider/category_provider.dart';
-import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 import 'package:todo_firebase/features/category/category_homepage/widgets/category_card.dart';
-import 'package:todo_firebase/utils/shared_widgets/no_internet_widget.dart';
+import 'package:todo_firebase/features/notes/notes_homepage/notes_page.dart';
+import 'package:todo_firebase/features/category/no_internet_widget_categories.dart';
 
 class HomePageBody extends StatefulWidget {
   const HomePageBody({super.key});
@@ -29,14 +29,13 @@ class _HomePageBodyState extends State<HomePageBody> {
       builder: (context, categoryProvider, _) {
         {
           if (categoryProvider.isConnecting == false) {
-            return NoInternetWidget();
+            return NoInternetWidgetCategories();
           } else {
             return Padding(
               padding: const EdgeInsets.all(24.0),
               child: categoryProvider.isFetching == true
                   ? Center(
                       child: CircularProgressIndicator(
-                      backgroundColor: Colors.orange,
                       color: Colors.orange,
                     ))
                   : GridView.builder(
@@ -49,6 +48,16 @@ class _HomePageBodyState extends State<HomePageBody> {
                       itemCount: categoryProvider.categories.length,
                       itemBuilder: (context, index) {
                         return InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return NotesPage(
+                                  categoryName: categoryProvider
+                                      .categories[index]["name"] as String,
+                                  categoryId:
+                                      categoryProvider.categories[index].id);
+                            }));
+                          },
                           onLongPress: () {
                             AwesomeDialog(
                               context: context,

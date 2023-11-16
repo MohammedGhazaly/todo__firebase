@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_firebase/features/auths/login.dart';
 import 'package:todo_firebase/features/category/add_category/add_category.dart';
 import 'package:todo_firebase/features/category/category_homepage/widgets/home_page_body.dart';
-import 'package:todo_firebase/features/category/category_provider/category_provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("TODO"),
+        title: Text("Categories"),
         actions: [
           IconButton(
               onPressed: () async {

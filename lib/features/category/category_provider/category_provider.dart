@@ -2,7 +2,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 
 class CategoryProvider extends ChangeNotifier {
   CollectionReference categoriesCollection =
@@ -12,6 +11,7 @@ class CategoryProvider extends ChangeNotifier {
   bool isUpdating = false;
   List<QueryDocumentSnapshot> categories = [];
   bool isConnecting = true;
+
   Future<void> addCategory(
       {required String categoryName,
       required String userId,

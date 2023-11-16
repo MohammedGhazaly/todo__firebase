@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_firebase/features/category/category_homepage/home_page.dart';
 import 'package:todo_firebase/features/category/category_provider/category_provider.dart';
 
-class NoInternetWidget extends StatelessWidget {
-  const NoInternetWidget({
+class NoInternetWidgetCategories extends StatelessWidget {
+  const NoInternetWidgetCategories({
     super.key,
   });
 
@@ -27,7 +26,8 @@ class NoInternetWidget extends StatelessWidget {
                 onPressed: () async {
                   if (!context.mounted) return;
 
-                  Provider.of<CategoryProvider>(context).getCategories(context);
+                  Provider.of<CategoryProvider>(context, listen: false)
+                      .getCategories(context);
                 },
                 child: Text("Try again"))
           ],
